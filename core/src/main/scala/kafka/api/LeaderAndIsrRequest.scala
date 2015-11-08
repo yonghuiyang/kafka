@@ -56,11 +56,13 @@ object PartitionStateInfo {
     val zkVersion = buffer.getInt
     val replicationFactor = buffer.getInt
     val replicas = for(i <- 0 until replicationFactor) yield buffer.getInt
+    val replicaDirsSize = buffer.getInt
+    val replicaDirs = for(i <- 0 until replicaDirsSize) yield readShortString(buffer) -> readShortString(buffer)
     PartitionStateInfo(LeaderIsrAndControllerEpoch(LeaderAndIsr(leader, leaderEpoch, isr.toList, zkVersion), controllerEpoch),
-                       replicas.toSet)
+                       replicas.toSet, replicaDirs.toMap)
   }
 }
-
+Kk
 case class PartitionStateInfo(leaderIsrAndControllerEpoch: LeaderIsrAndControllerEpoch,
                               allReplicas: Set[Int]) {
   def replicationFactor = allReplicas.size
