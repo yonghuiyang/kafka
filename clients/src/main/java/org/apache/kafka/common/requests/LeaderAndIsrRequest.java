@@ -40,8 +40,20 @@ public class LeaderAndIsrRequest extends AbstractRequest {
 
         public PartitionState(int controllerEpoch, int leader,
                               int leaderEpoch, List<Integer> isr,
+                              int zkVersion, Set<Integer> replicas) {
+            this.controllerEpoch = controllerEpoch;
+            this.leader = leader;
+            this.leaderEpoch = leaderEpoch;
+            this.isr = isr;
+            this.zkVersion = zkVersion;
+            this.replicas = replicas;
+            this.replicaLogDirs = new HashMap<String, String>();
+        }
+
+        public PartitionState(int controllerEpoch, int leader,
+                              int leaderEpoch, List<Integer> isr,
                               int zkVersion, Set<Integer> replicas,
-                              HashMap<String, String> replicaLogDirs = new HashMap<String,String>()) {
+                              HashMap<String, String> replicaLogDirs) {
             this.controllerEpoch = controllerEpoch;
             this.leader = leader;
             this.leaderEpoch = leaderEpoch;
@@ -115,14 +127,14 @@ public class LeaderAndIsrRequest extends AbstractRequest {
             partitionStateData.set(ISR_KEY_NAME, partitionState.isr.toArray());
             partitionStateData.set(ZK_VERSION_KEY_NAME, partitionState.zkVersion);
             partitionStateData.set(REPLICAS_KEY_NAME, partitionState.replicas.toArray());
-            List<Struct> replicaLogDirs = new ArrayList<>(partitionState.replicaLogDirs.size())
+            List<Struct> replicaLogDirs = new ArrayList<>(partitionState.replicaLogDirs.size());
             for (Map.Entry<String, String> dirEntry : partitionState.replicaLogDirs.entrySet()) {
                 Struct replicaLogDir = struct.instance(REPLICA_LOGDIRS_KEY_NAME);
                 replicaLogDir.set(REPLICA_ID_KEY_NAME, dirEntry.getKey());
                 replicaLogDir.set(LOG_DIR_KEY_NAME, dirEntry.getValue());
                 replicaLogDirs.add(replicaLogDir);
             }
-            partitionStateData.set(REPLICA_LOGDIRS_KEY_NAME, replicaLogDirs.toArray())
+            partitionStateData.set(REPLICA_LOGDIRS_KEY_NAME, replicaLogDirs.toArray());
             partitionStatesData.add(partitionStateData);
         }
         struct.set(PARTITION_STATES_KEY_NAME, partitionStatesData.toArray());
