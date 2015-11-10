@@ -106,7 +106,6 @@ public class RequestResponseTest {
         req.writeTo(buffer);
         buffer.rewind();
         AbstractRequestResponse deserialized;
-        System.out.println("serialization is ok");
         if (version == null) {
             Method deserializer = req.getClass().getDeclaredMethod("parse", ByteBuffer.class);
             deserialized = (AbstractRequestResponse) deserializer.invoke(null, buffer);
@@ -114,13 +113,10 @@ public class RequestResponseTest {
             Method deserializer = req.getClass().getDeclaredMethod("parse", ByteBuffer.class, Integer.TYPE);
             deserialized = (AbstractRequestResponse) deserializer.invoke(null, buffer, version);
         }
-        System.out.println("deserialization is ok");
-        System.out.println(deserialized.toString());
+
         assertEquals("The original and deserialized of " + req.getClass().getSimpleName() + " should be the same.", req, deserialized);
-        System.out.println("object is equals");
         assertEquals("The original and deserialized of " + req.getClass().getSimpleName() + " should have the same hashcode.",
                 req.hashCode(), deserialized.hashCode());
-        System.out.println("The hashcode is equals");
     }
 
     @Test
@@ -328,10 +324,10 @@ public class RequestResponseTest {
         Map<TopicPartition, LeaderAndIsrRequest.PartitionState> partitionStates = new HashMap<>();
         List<Integer> isr = Arrays.asList(1, 2);
         List<Integer> replicas = Arrays.asList(1, 2, 3, 4);
-        HashMap<String, String> replicaDirs = new HashMap<String, String>();
+        Map<String, String> replicaDirs = new HashMap<String, String>();
         replicaDirs.put("1", "/data1/kafka_data");
         partitionStates.put(new TopicPartition("topic5", 105),
-                new LeaderAndIsrRequest.PartitionState(0, 2, 1, new ArrayList<>(isr), 2, new HashSet<>(replicas), replicaDirs));
+                new LeaderAndIsrRequest.PartitionState(0, 2, 1, new ArrayList<>(isr), 2, new HashSet<>(replicas)));
         partitionStates.put(new TopicPartition("topic5", 1),
                 new LeaderAndIsrRequest.PartitionState(1, 1, 1, new ArrayList<>(isr), 2, new HashSet<>(replicas), replicaDirs));
         partitionStates.put(new TopicPartition("topic20", 1),
@@ -342,7 +338,6 @@ public class RequestResponseTest {
                 new LeaderAndIsrRequest.EndPoint(1, "test1", 1223)
         ));
         LeaderAndIsrRequest leaderAndIsrRequest = new LeaderAndIsrRequest(1, 10, partitionStates, leaders);
-        //System.out.println(leaderAndIsrRequest);
         return leaderAndIsrRequest;
     }
 

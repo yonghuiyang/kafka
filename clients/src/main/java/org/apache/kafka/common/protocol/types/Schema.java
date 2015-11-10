@@ -48,7 +48,6 @@ public class Schema extends Type {
         Struct r = (Struct) o;
         for (int i = 0; i < fields.length; i++) {
             Field f = fields[i];
-            System.out.println(f.name);
             try {
                 Object value = f.type().validate(r.get(f));
                 f.type.write(buffer, value);
@@ -58,7 +57,6 @@ public class Schema extends Type {
                                           (e.getMessage() == null ? e.getClass().getName() : e.getMessage()));
             }
         }
-        System.out.println("Struct write OK");
     }
 
     /**
