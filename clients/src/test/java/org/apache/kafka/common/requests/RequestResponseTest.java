@@ -337,8 +337,8 @@ public class RequestResponseTest {
                 new LeaderAndIsrRequest.EndPoint(0, "test0", 1223),
                 new LeaderAndIsrRequest.EndPoint(1, "test1", 1223)
         ));
-        LeaderAndIsrRequest leaderAndIsrRequest = new LeaderAndIsrRequest(1, 10, partitionStates, leaders);
-        return leaderAndIsrRequest;
+
+        return new LeaderAndIsrRequest(1, 10, partitionStates, leaders);
     }
 
     private AbstractRequestResponse createLeaderAndIsrResponse() {

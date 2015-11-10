@@ -345,12 +345,10 @@ class ControllerBrokerRequestBatch(controller: KafkaController) extends  Logging
       leaderAndIsrRequestMap.foreach { case (broker, partitionStateInfos) =>
         partitionStateInfos.foreach { case (topicPartition, state) =>
           val typeOfRequest = if (broker == state.leaderIsrAndControllerEpoch.leaderAndIsr.leader) "become-leader" else "become-follower"
-          stateChangeLogger.trace(state.toString())
           stateChangeLogger.trace(("Controller %d epoch %d sending %s LeaderAndIsr request %s to broker %d " +
                                    "for partition [%s,%d]").format(controllerId, controllerEpoch, typeOfRequest,
                                                                    state.leaderIsrAndControllerEpoch, broker,
                                                                    topicPartition.topic, topicPartition.partition))
-
         }
         val leaderIds = partitionStateInfos.map(_._2.leaderIsrAndControllerEpoch.leaderAndIsr.leader).toSet
         val leaders = controllerContext.liveOrShuttingDownBrokers.filter(b => leaderIds.contains(b.id)).map { b =>
