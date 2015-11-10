@@ -36,7 +36,7 @@ public class LeaderAndIsrRequest extends AbstractRequest {
         public final List<Integer> isr;
         public final int zkVersion;
         public final Set<Integer> replicas;
-        public final HashMap<String, String> replicaLogDirs;
+        public final Map<String, String> replicaLogDirs;
 
         public PartitionState(int controllerEpoch, int leader,
                               int leaderEpoch, List<Integer> isr,
@@ -53,7 +53,7 @@ public class LeaderAndIsrRequest extends AbstractRequest {
         public PartitionState(int controllerEpoch, int leader,
                               int leaderEpoch, List<Integer> isr,
                               int zkVersion, Set<Integer> replicas,
-                              HashMap<String, String> replicaLogDirs) {
+                              Map<String, String> replicaLogDirs) {
             this.controllerEpoch = controllerEpoch;
             this.leader = leader;
             this.leaderEpoch = leaderEpoch;
@@ -62,7 +62,6 @@ public class LeaderAndIsrRequest extends AbstractRequest {
             this.replicas = replicas;
             this.replicaLogDirs = replicaLogDirs;
         }
-
     }
 
     public static final class EndPoint {
@@ -129,7 +128,7 @@ public class LeaderAndIsrRequest extends AbstractRequest {
             partitionStateData.set(REPLICAS_KEY_NAME, partitionState.replicas.toArray());
             List<Struct> replicaLogDirs = new ArrayList<>(partitionState.replicaLogDirs.size());
             for (Map.Entry<String, String> dirEntry : partitionState.replicaLogDirs.entrySet()) {
-                Struct replicaLogDir = struct.instance(REPLICA_LOGDIRS_KEY_NAME);
+                Struct replicaLogDir = partitionStateData.instance(REPLICA_LOGDIRS_KEY_NAME);
                 replicaLogDir.set(REPLICA_ID_KEY_NAME, dirEntry.getKey());
                 replicaLogDir.set(LOG_DIR_KEY_NAME, dirEntry.getValue());
                 replicaLogDirs.add(replicaLogDir);

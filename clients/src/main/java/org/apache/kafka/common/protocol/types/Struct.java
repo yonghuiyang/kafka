@@ -238,6 +238,7 @@ public class Struct {
      * Write this struct to a buffer
      */
     public void writeTo(ByteBuffer buffer) {
+        System.out.println(this.schema.toString());
         this.schema.write(buffer, this);
     }
 
